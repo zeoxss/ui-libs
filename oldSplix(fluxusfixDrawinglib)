@@ -375,7 +375,7 @@ do
 		--
 		theme.accent = accent
 		--
-		local window = {pages = {}, isVisible = false, uibind = Enum.KeyCode.Insert, currentPage = nil, fading = false, dragging = false, drag = Vector2.new(0,0), currentContent = {frame = nil, dropdown = nil, multibox = nil, colorpicker = nil, keybind = nil}}
+		local window = {pages = {}, isVisible = false, uibind = Enum.KeyCode.Z, currentPage = nil, fading = false, dragging = false, drag = Vector2.new(0,0), currentContent = {frame = nil, dropdown = nil, multibox = nil, colorpicker = nil, keybind = nil}}
 		--
 		local main_frame = utility:Create("Frame", {Vector2.new(0,0)}, {
 			Size = utility:Size(0, size.X, 0, size.Y),
@@ -1392,6 +1392,13 @@ do
 			Visible = page.open
 		}, section.visibleContent)
 		--
+		local toggle__gradient = utility:Create("Image", {Vector2.new(0,0), toggle_frame}, {
+			Size = utility:Size(1, 0, 1, 0, toggle_frame),
+			Position = utility:Position(0, 0, 0 , 0, toggle_frame),
+			Transparency = 0.5,
+			Visible = page.open
+		}, section.visibleContent)
+		--
 		local toggle_title = utility:Create("TextLabel", {Vector2.new(23,toggle.axis + (15/2) - (utility:GetTextBounds(name, theme.textsize, theme.font).Y/2)), section.section_frame}, {
 			Text = name,
 			Size = theme.textsize,
@@ -1401,6 +1408,8 @@ do
 			Position = utility:Position(0, 23, 0, toggle.axis + (15/2) - (utility:GetTextBounds(name, theme.textsize, theme.font).Y/2), section.section_frame),
 			Visible = page.open
 		}, section.visibleContent)
+		--
+		utility:LoadImage(toggle__gradient, "gradient", "https://i.imgur.com/IP5H9wy.png")
 		--
 		function toggle:Get()
 			return toggle.current
@@ -1458,6 +1467,15 @@ do
 				Visible = page.open
 			}, section.visibleContent)
 			--
+			local colorpicker__transparency
+			if transp then
+				colorpicker__transparency = utility:Create("Image", {Vector2.new(1,1), colorpicker_inline}, {
+					Size = utility:Size(1, -2, 1, -2, colorpicker_inline),
+					Position = utility:Position(0, 1, 0 , 1, colorpicker_inline),
+					Visible = page.open
+				}, section.visibleContent)
+			end
+			--
 			local colorpicker_frame = utility:Create("Frame", {Vector2.new(1,1), colorpicker_inline}, {
 				Size = utility:Size(1, -2, 1, -2, colorpicker_inline),
 				Position = utility:Position(0, 1, 0, 1, colorpicker_inline),
@@ -1465,6 +1483,18 @@ do
 				Transparency = transp and (1 - transp) or 1,
 				Visible = page.open
 			}, section.visibleContent)
+			--
+			local colorpicker__gradient = utility:Create("Image", {Vector2.new(0,0), colorpicker_frame}, {
+				Size = utility:Size(1, 0, 1, 0, colorpicker_frame),
+				Position = utility:Position(0, 0, 0 , 0, colorpicker_frame),
+				Transparency = 0.5,
+				Visible = page.open
+			}, section.visibleContent)
+			--
+			if transp then
+				utility:LoadImage(colorpicker__transparency, "cptransp", "https://i.imgur.com/IIPee2A.png")
+			end
+			utility:LoadImage(colorpicker__gradient, "gradient", "https://i.imgur.com/IP5H9wy.png")
 			--
 			function colorpicker:Set(color, transp_val)
 				if typeof(color) == "table" then
@@ -1613,6 +1643,16 @@ do
 								Color = Color3.fromHSV(colorpicker.current[1],1,1)
 							}, colorpicker.holder.drawings);colorpicker.holder.background = colorpicker_open_picker_bg
 							--
+							local colorpicker_open_picker_image = utility:Create("Image", {Vector2.new(0,0), colorpicker_open_picker_bg}, {
+								Size = utility:Size(1, 0, 1, 0, colorpicker_open_picker_bg),
+								Position = utility:Position(0, 0, 0 , 0, colorpicker_open_picker_bg),
+							}, colorpicker.holder.drawings);colorpicker.holder.picker = colorpicker_open_picker_image
+							--
+							local colorpicker_open_picker_cursor = utility:Create("Image", {Vector2.new((colorpicker_open_picker_image.Size.X*colorpicker.current[2])-3,(colorpicker_open_picker_image.Size.Y*(1-colorpicker.current[3]))-3), colorpicker_open_picker_image}, {
+								Size = utility:Size(0, 6, 0, 6, colorpicker_open_picker_image),
+								Position = utility:Position(colorpicker.current[2], -3, 1-colorpicker.current[3] , -3, colorpicker_open_picker_image),
+							}, colorpicker.holder.drawings);colorpicker.holder.picker_cursor = colorpicker_open_picker_cursor
+							--
 							local colorpicker_open_huepicker_outline = utility:Create("Frame", {Vector2.new(colorpicker_open_frame.Size.X-19,17), colorpicker_open_frame}, {
 								Size = utility:Size(0, 15, 1, transp and -40 or -21, colorpicker_open_frame),
 								Position = utility:Position(1, -19, 0, 17, colorpicker_open_frame),
@@ -1625,9 +1665,14 @@ do
 								Color = theme.inline
 							}, colorpicker.holder.drawings)
 							--
+							local colorpicker_open_huepicker_image = utility:Create("Image", {Vector2.new(1,1), colorpicker_open_huepicker_inline}, {
+								Size = utility:Size(1, -2, 1, -2, colorpicker_open_huepicker_inline),
+								Position = utility:Position(0, 1, 0 , 1, colorpicker_open_huepicker_inline),
+							}, colorpicker.holder.drawings);colorpicker.holder.huepicker = colorpicker_open_huepicker_image
+							--
 							local colorpicker_open_huepicker_cursor_outline = utility:Create("Frame", {Vector2.new(-3,(colorpicker_open_huepicker_image.Size.Y*colorpicker.current[1])-3), colorpicker_open_huepicker_image}, {
-								Size = utility:Size(1, 6, 0, 6),
-								Position = utility:Position(0, -3, colorpicker.current[1], -3),
+								Size = utility:Size(1, 6, 0, 6, colorpicker_open_huepicker_image),
+								Position = utility:Position(0, -3, colorpicker.current[1], -3, colorpicker_open_huepicker_image),
 								Color = theme.outline
 							}, colorpicker.holder.drawings);colorpicker.holder.huepicker_cursor[1] = colorpicker_open_huepicker_cursor_outline
 							--
@@ -1662,9 +1707,14 @@ do
 									Color = Color3.fromHSV(colorpicker.current[1], colorpicker.current[2], colorpicker.current[3])
 								}, colorpicker.holder.drawings);colorpicker.holder.transparencybg = colorpicker_open_transparency_bg
 								--
-								local colorpicker_open_transparency_cursor_outline = utility:Create("Frame", {Vector2.new(((1-colorpicker.current[4]))-3,-3), colorpicker_open_transparency_image}, {
-									Size = utility:Size(0, 6, 1, 6),
-									Position = utility:Position(1-colorpicker.current[4], -3, 0, -3),
+								local colorpicker_open_transparency_image = utility:Create("Image", {Vector2.new(1,1), colorpicker_open_transparency_inline}, {
+									Size = utility:Size(1, -2, 1, -2, colorpicker_open_transparency_inline),
+									Position = utility:Position(0, 1, 0 , 1, colorpicker_open_transparency_inline),
+								}, colorpicker.holder.drawings);colorpicker.holder.transparency = colorpicker_open_transparency_image
+								--
+								local colorpicker_open_transparency_cursor_outline = utility:Create("Frame", {Vector2.new((colorpicker_open_transparency_image.Size.X*(1-colorpicker.current[4]))-3,-3), colorpicker_open_transparency_image}, {
+									Size = utility:Size(0, 6, 1, 6, colorpicker_open_transparency_image),
+									Position = utility:Position(1-colorpicker.current[4], -3, 0, -3, colorpicker_open_transparency_image),
 									Color = theme.outline
 								}, colorpicker.holder.drawings);colorpicker.holder.transparency_cursor[1] = colorpicker_open_transparency_cursor_outline
 								--
@@ -1680,7 +1730,13 @@ do
 									Color = Color3.fromHSV(0, 0, 1 - colorpicker.current[4]),
 								}, colorpicker.holder.drawings);colorpicker.holder.transparency_cursor[3] = colorpicker_open_transparency_cursor_color
 								--
-						end
+								utility:LoadImage(colorpicker_open_transparency_image, "transp", "https://i.imgur.com/ncssKbH.png")
+								--utility:LoadImage(colorpicker_open_transparency_image, "transp", "https://i.imgur.com/VcMAYjL.png")
+							end
+							--
+							utility:LoadImage(colorpicker_open_picker_image, "valsat", "https://i.imgur.com/wpDRqVH.png")
+							utility:LoadImage(colorpicker_open_picker_cursor, "valsat_cursor", "https://raw.githubusercontent.com/mvonwalk/splix-assets/main/Images-cursor.png")
+							utility:LoadImage(colorpicker_open_huepicker_image, "hue", "https://i.imgur.com/iEOsHFv.png")
 							--
 							window.currentContent.frame = colorpicker_open_inline
 							window.currentContent.colorpicker = colorpicker
@@ -1809,6 +1865,13 @@ do
 				Visible = page.open
 			}, section.visibleContent)
 			--
+			local keybind__gradient = utility:Create("Image", {Vector2.new(0,0), keybind_frame}, {
+				Size = utility:Size(1, 0, 1, 0, keybind_frame),
+				Position = utility:Position(0, 0, 0 , 0, keybind_frame),
+				Transparency = 0.5,
+				Visible = page.open
+			}, section.visibleContent)
+			--
 			local keybind_value = utility:Create("TextLabel", {Vector2.new(keybind_outline.Size.X/2,1), keybind_outline}, {
 				Text = "...",
 				Size = theme.textsize,
@@ -1819,6 +1882,8 @@ do
 				Position = utility:Position(0.5, 0, 1, 0, keybind_outline),
 				Visible = page.open
 			}, section.visibleContent)
+			--
+			utility:LoadImage(keybind__gradient, "gradient", "https://i.imgur.com/IP5H9wy.png")
 			--
 			function keybind:Shorten(string)
 				for i,v in pairs(shortenedInputs) do
@@ -1967,6 +2032,15 @@ do
 							Visible = page.open
 						}, keybind.modemenu.drawings)
 						--
+						local keybind__gradient = utility:Create("Image", {Vector2.new(0,0), modemenu_frame}, {
+							Size = utility:Size(1, 0, 1, 0, modemenu_frame),
+							Position = utility:Position(0, 0, 0 , 0, modemenu_frame),
+							Transparency = 0.5,
+							Visible = page.open
+						}, keybind.modemenu.drawings)
+						--
+						utility:LoadImage(keybind__gradient, "gradient", "https://i.imgur.com/IP5H9wy.png")
+						--
 						for i,v in pairs({"Always", "Toggle", "Hold"}) do
 							local button_title = utility:Create("TextLabel", {Vector2.new(modemenu_frame.Size.X/2,15 * (i-1)), modemenu_frame}, {
 								Text = v,
@@ -2068,6 +2142,13 @@ do
 			Visible = page.open
 		}, section.visibleContent)
 		--
+		local slider__gradient = utility:Create("Image", {Vector2.new(0,0), slider_frame}, {
+			Size = utility:Size(1, 0, 1, 0, slider_frame),
+			Position = utility:Position(0, 0, 0 , 0, slider_frame),
+			Transparency = 0.5,
+			Visible = page.open
+		}, section.visibleContent)
+		--
 		local textBounds = utility:GetTextBounds(name, theme.textsize, theme.font)
 		local slider_value = utility:Create("TextLabel", {Vector2.new(slider_outline.Size.X/2,(slider_outline.Size.Y/2) - (textBounds.Y/2)), slider_outline}, {
 			Text = slider.current..slider.sub.."/"..slider.max..slider.sub,
@@ -2079,6 +2160,8 @@ do
 			Position = utility:Position(0.5, 0, 0, (slider_outline.Size.Y/2) - (textBounds.Y/2), slider_outline),
 			Visible = page.open
 		}, section.visibleContent)
+		--
+		utility:LoadImage(slider__gradient, "gradient", "https://i.imgur.com/IP5H9wy.png")
 		--
 		function slider:Set(value)
 			slider.current = math.clamp(math.round(value * slider.decimals) / slider.decimals, slider.min, slider.max)
@@ -2164,6 +2247,13 @@ do
 			Visible = page.open
 		}, section.visibleContent)
 		--
+		local button_gradient = utility:Create("Image", {Vector2.new(0,0), button_frame}, {
+			Size = utility:Size(1, 0, 1, 0, button_frame),
+			Position = utility:Position(0, 0, 0 , 0, button_frame),
+			Transparency = 0.5,
+			Visible = page.open
+		}, section.visibleContent)
+		--
 		local button_title = utility:Create("TextLabel", {Vector2.new(button_frame.Size.X/2,1), button_frame}, {
 			Text = name,
 			Size = theme.textsize,
@@ -2174,6 +2264,8 @@ do
 			Position = utility:Position(0.5, 0, 0, 1, button_frame),
 			Visible = page.open
 		}, section.visibleContent)
+		--
+		utility:LoadImage(button_gradient, "gradient", "https://i.imgur.com/IP5H9wy.png")
 		--
 		library.began[#library.began + 1] = function(Input)
 			if Input.UserInputType == Enum.UserInputType.MouseButton1 and button_outline.Visible and window.isVisible and utility:MouseOverDrawing({section.section_frame.Position.X, section.section_frame.Position.Y + button.axis, section.section_frame.Position.X + section.section_frame.Size.X, section.section_frame.Position.Y + button.axis + 20}) and not window:IsOverContent() then
@@ -2225,6 +2317,13 @@ do
 				Visible = page.open
 			}, section.visibleContent)
 			--
+			local button_gradient = utility:Create("Image", {Vector2.new(0,0), button_frame}, {
+				Size = utility:Size(1, 0, 1, 0, button_frame),
+				Position = utility:Position(0, 0, 0 , 0, button_frame),
+				Transparency = 0.5,
+				Visible = page.open
+			}, section.visibleContent)
+			--
 			local button_title = utility:Create("TextLabel", {Vector2.new(button_frame.Size.X/2,1), button_frame}, {
 				Text = buttons[i][1],
 				Size = theme.textsize,
@@ -2235,6 +2334,8 @@ do
 				Position = utility:Position(0.5, 0, 0, 1, button_frame),
 				Visible = page.open
 			}, section.visibleContent)
+			--
+			utility:LoadImage(button_gradient, "gradient", "https://i.imgur.com/IP5H9wy.png")
 			--
 			library.began[#library.began + 1] = function(Input)
 				if Input.UserInputType == Enum.UserInputType.MouseButton1 and button_outline.Visible and window.isVisible and utility:MouseOverDrawing({section.section_frame.Position.X + (i == 2 and (section.section_frame.Size.X/2) or 0), section.section_frame.Position.Y + button.axis, section.section_frame.Position.X + section.section_frame.Size.X - (i == 1 and (section.section_frame.Size.X/2) or 0), section.section_frame.Position.Y + button.axis + 20}) and not window:IsOverContent() then
@@ -2292,6 +2393,13 @@ do
 			Visible = page.open
 		}, section.visibleContent)
 		--
+		local dropdown__gradient = utility:Create("Image", {Vector2.new(0,0), dropdown_frame}, {
+			Size = utility:Size(1, 0, 1, 0, dropdown_frame),
+			Position = utility:Position(0, 0, 0 , 0, dropdown_frame),
+			Transparency = 0.5,
+			Visible = page.open
+		}, section.visibleContent)
+		--
 		local dropdown_value = utility:Create("TextLabel", {Vector2.new(3,dropdown_frame.Size.Y/2 - 7), dropdown_frame}, {
 			Text = dropdown.current,
 			Size = theme.textsize,
@@ -2301,6 +2409,15 @@ do
 			Position = utility:Position(0, 3, 0, (dropdown_frame.Size.Y/2) - 7, dropdown_frame),
 			Visible = page.open
 		}, section.visibleContent)
+		--
+		local dropdown_image = utility:Create("Image", {Vector2.new(dropdown_frame.Size.X - 15,dropdown_frame.Size.Y/2 - 3), dropdown_frame}, {
+			Size = utility:Size(0, 9, 0, 6, dropdown_frame),
+			Position = utility:Position(1, -15, 0.5, -3, dropdown_frame),
+			Visible = page.open
+		}, section.visibleContent);dropdown["dropdown_image"] = dropdown_image
+		--
+		utility:LoadImage(dropdown_image, "arrow_down", "https://i.imgur.com/tVqy0nL.png")
+		utility:LoadImage(dropdown__gradient, "gradient", "https://i.imgur.com/IP5H9wy.png")
 		--
 		function dropdown:Update()
 			if dropdown.open and dropdown.holder.inline then
@@ -2337,6 +2454,7 @@ do
 					if not dropdown.open then
 						window:CloseContent()
 						dropdown.open = not dropdown.open
+						utility:LoadImage(dropdown_image, "arrow_up", "https://i.imgur.com/SL9cbQp.png")
 						--
 						local dropdown_open_outline = utility:Create("Frame", {Vector2.new(0,19), dropdown_outline}, {
 							Size = utility:Size(1, 0, 0, 3 + (#options * 19), dropdown_outline),
@@ -2359,6 +2477,16 @@ do
 								Color = theme.light_contrast,
 								Visible = page.open
 							}, dropdown.holder.drawings)
+                            --[[
+                            local dropdown_value_gradient = utility:Create("Image", {Vector2.new(0,0), dropdown_value_frame}, {
+                                Size = utility:Size(1, 0, 1, 0, dropdown_value_frame),
+                                Position = utility:Position(0, 0, 0 , 0, dropdown_value_frame),
+                                Transparency = 0.5,
+                                Visible = page.open
+                            }, dropdown.holder.drawings)
+                            --
+                            utility:LoadImage(dropdown_value_gradient, "gradient", "https://i.imgur.com/IP5H9wy.png")]]
+							--
 							local dropdown_value = utility:Create("TextLabel", {Vector2.new(v == tostring(dropdown.current) and 8 or 6,2), dropdown_value_frame}, {
 								Text = v,
 								Size = theme.textsize,
@@ -2374,6 +2502,7 @@ do
 						window.currentContent.dropdown = dropdown
 					else
 						dropdown.open = not dropdown.open
+						utility:LoadImage(dropdown_image, "arrow_down", "https://i.imgur.com/tVqy0nL.png")
 						--
 						for i,v in pairs(dropdown.holder.drawings) do
 							utility:Remove(v)
@@ -2476,6 +2605,13 @@ do
 			Visible = page.open
 		}, section.visibleContent)
 		--
+		local multibox__gradient = utility:Create("Image", {Vector2.new(0,0), multibox_frame}, {
+			Size = utility:Size(1, 0, 1, 0, multibox_frame),
+			Position = utility:Position(0, 0, 0 , 0, multibox_frame),
+			Transparency = 0.5,
+			Visible = page.open
+		}, section.visibleContent)
+		--
 		local multibox_value = utility:Create("TextLabel", {Vector2.new(3,multibox_frame.Size.Y/2 - 7), multibox_frame}, {
 			Text = "",
 			Size = theme.textsize,
@@ -2485,6 +2621,15 @@ do
 			Position = utility:Position(0, 3, 0, (multibox_frame.Size.Y/2) - 7, multibox_frame),
 			Visible = page.open
 		}, section.visibleContent)
+		--
+		local multibox_image = utility:Create("Image", {Vector2.new(multibox_frame.Size.X - 15,multibox_frame.Size.Y/2 - 3), multibox_frame}, {
+			Size = utility:Size(0, 9, 0, 6, multibox_frame),
+			Position = utility:Position(1, -15, 0.5, -3, multibox_frame),
+			Visible = page.open
+		}, section.visibleContent);multibox["multibox_image"] = multibox_image
+		--
+		utility:LoadImage(multibox_image, "arrow_down", "https://i.imgur.com/tVqy0nL.png")
+		utility:LoadImage(multibox__gradient, "gradient", "https://i.imgur.com/IP5H9wy.png")
 		--
 		function multibox:Update()
 			if multibox.open and multibox.holder.inline then
@@ -2576,6 +2721,16 @@ do
 								Color = theme.light_contrast,
 								Visible = page.open
 							}, multibox.holder.drawings)
+                            --[[
+                            local multibox_value_gradient = utility:Create("Image", {Vector2.new(0,0), multibox_value_frame}, {
+                                Size = utility:Size(1, 0, 1, 0, multibox_value_frame),
+                                Position = utility:Position(0, 0, 0 , 0, multibox_value_frame),
+                                Transparency = 0.5,
+                                Visible = page.open
+                            }, multibox.holder.drawings)
+                            --
+                            utility:LoadImage(multibox_value_gradient, "gradient", "https://i.imgur.com/IP5H9wy.png")]]
+							--
 							local multibox_value = utility:Create("TextLabel", {Vector2.new(table.find(multibox.current, v) and 8 or 6,2), multibox_value_frame}, {
 								Text = v,
 								Size = theme.textsize,
@@ -2591,6 +2746,7 @@ do
 						window.currentContent.multibox = multibox
 					else
 						multibox.open = not multibox.open
+						utility:LoadImage(multibox_image, "arrow_down", "https://i.imgur.com/tVqy0nL.png")
 						--
 						for i,v in pairs(multibox.holder.drawings) do
 							utility:Remove(v)
@@ -2697,6 +2853,13 @@ do
 			Visible = page.open
 		}, section.visibleContent)
 		--
+		local keybind__gradient = utility:Create("Image", {Vector2.new(0,0), keybind_frame}, {
+			Size = utility:Size(1, 0, 1, 0, keybind_frame),
+			Position = utility:Position(0, 0, 0 , 0, keybind_frame),
+			Transparency = 0.5,
+			Visible = page.open
+		}, section.visibleContent)
+		--
 		local keybind_value = utility:Create("TextLabel", {Vector2.new(keybind_outline.Size.X/2,1), keybind_outline}, {
 			Text = "...",
 			Size = theme.textsize,
@@ -2707,6 +2870,8 @@ do
 			Position = utility:Position(0.5, 0, 1, 0, keybind_outline),
 			Visible = page.open
 		}, section.visibleContent)
+		--
+		utility:LoadImage(keybind__gradient, "gradient", "https://i.imgur.com/IP5H9wy.png")
 		--
 		function keybind:Shorten(string)
 			for i,v in pairs(shortenedInputs) do
@@ -2849,6 +3014,15 @@ do
 						Visible = page.open
 					}, keybind.modemenu.drawings)
 					--
+					local keybind__gradient = utility:Create("Image", {Vector2.new(0,0), modemenu_frame}, {
+						Size = utility:Size(1, 0, 1, 0, modemenu_frame),
+						Position = utility:Position(0, 0, 0 , 0, modemenu_frame),
+						Transparency = 0.5,
+						Visible = page.open
+					}, keybind.modemenu.drawings)
+					--
+					utility:LoadImage(keybind__gradient, "gradient", "https://i.imgur.com/IP5H9wy.png")
+					--
 					for i,v in pairs({"Always", "Toggle", "Hold"}) do
 						local button_title = utility:Create("TextLabel", {Vector2.new(modemenu_frame.Size.X/2,15 * (i-1)), modemenu_frame}, {
 							Text = v,
@@ -2921,11 +3095,26 @@ do
 		}, section.visibleContent)
 		--
 		local colorpicker__transparency
+		if transp then
+			colorpicker__transparency = utility:Create("Image", {Vector2.new(1,1), colorpicker_inline}, {
+				Size = utility:Size(1, -2, 1, -2, colorpicker_inline),
+				Position = utility:Position(0, 1, 0 , 1, colorpicker_inline),
+				Visible = page.open
+			}, section.visibleContent)
+		end
+		--
 		local colorpicker_frame = utility:Create("Frame", {Vector2.new(1,1), colorpicker_inline}, {
 			Size = utility:Size(1, -2, 1, -2, colorpicker_inline),
 			Position = utility:Position(0, 1, 0, 1, colorpicker_inline),
 			Color = def,
 			Transparency = transp and (1 - transp) or 1,
+			Visible = page.open
+		}, section.visibleContent)
+		--
+		local colorpicker__gradient = utility:Create("Image", {Vector2.new(0,0), colorpicker_frame}, {
+			Size = utility:Size(1, 0, 1, 0, colorpicker_frame),
+			Position = utility:Position(0, 0, 0 , 0, colorpicker_frame),
+			Transparency = 0.5,
 			Visible = page.open
 		}, section.visibleContent)
 		--
@@ -2939,6 +3128,10 @@ do
 			Visible = page.open
 		}, section.visibleContent)
 		--
+		if transp then
+			utility:LoadImage(colorpicker__transparency, "cptransp", "https://i.imgur.com/IIPee2A.png")
+		end
+		utility:LoadImage(colorpicker__gradient, "gradient", "https://i.imgur.com/IP5H9wy.png")
 		--
 		function colorpicker:Set(color, transp_val)
 			if typeof(color) == "table" then
@@ -3079,6 +3272,16 @@ do
 							Color = Color3.fromHSV(colorpicker.current[1],1,1)
 						}, colorpicker.holder.drawings);colorpicker.holder.background = colorpicker_open_picker_bg
 						--
+						local colorpicker_open_picker_image = utility:Create("Image", {Vector2.new(0,0), colorpicker_open_picker_bg}, {
+							Size = utility:Size(1, 0, 1, 0, colorpicker_open_picker_bg),
+							Position = utility:Position(0, 0, 0 , 0, colorpicker_open_picker_bg),
+						}, colorpicker.holder.drawings);colorpicker.holder.picker = colorpicker_open_picker_image
+						--
+						local colorpicker_open_picker_cursor = utility:Create("Image", {Vector2.new((colorpicker_open_picker_image.Size.X*colorpicker.current[2])-3,(colorpicker_open_picker_image.Size.Y*(1-colorpicker.current[3]))-3), colorpicker_open_picker_image}, {
+							Size = utility:Size(0, 6, 0, 6, colorpicker_open_picker_image),
+							Position = utility:Position(colorpicker.current[2], -3, 1-colorpicker.current[3] , -3, colorpicker_open_picker_image),
+						}, colorpicker.holder.drawings);colorpicker.holder.picker_cursor = colorpicker_open_picker_cursor
+						--
 						local colorpicker_open_huepicker_outline = utility:Create("Frame", {Vector2.new(colorpicker_open_frame.Size.X-19,17), colorpicker_open_frame}, {
 							Size = utility:Size(0, 15, 1, transp and -40 or -21, colorpicker_open_frame),
 							Position = utility:Position(1, -19, 0, 17, colorpicker_open_frame),
@@ -3091,9 +3294,14 @@ do
 							Color = theme.inline
 						}, colorpicker.holder.drawings)
 						--
-						local colorpicker_open_huepicker_cursor_outline = utility:Create("Frame", {Vector2.new(-3,(colorpicker.current[1])-3)}, {
-							Size = utility:Size(1, 6, 0, 6),
-							Position = utility:Position(0, -3, colorpicker.current[1], -3),
+						local colorpicker_open_huepicker_image = utility:Create("Image", {Vector2.new(1,1), colorpicker_open_huepicker_inline}, {
+							Size = utility:Size(1, -2, 1, -2, colorpicker_open_huepicker_inline),
+							Position = utility:Position(0, 1, 0 , 1, colorpicker_open_huepicker_inline),
+						}, colorpicker.holder.drawings);colorpicker.holder.huepicker = colorpicker_open_huepicker_image
+						--
+						local colorpicker_open_huepicker_cursor_outline = utility:Create("Frame", {Vector2.new(-3,(colorpicker_open_huepicker_image.Size.Y*colorpicker.current[1])-3), colorpicker_open_huepicker_image}, {
+							Size = utility:Size(1, 6, 0, 6, colorpicker_open_huepicker_image),
+							Position = utility:Position(0, -3, colorpicker.current[1], -3, colorpicker_open_huepicker_image),
 							Color = theme.outline
 						}, colorpicker.holder.drawings);colorpicker.holder.huepicker_cursor[1] = colorpicker_open_huepicker_cursor_outline
 						--
@@ -3128,9 +3336,14 @@ do
 								Color = Color3.fromHSV(colorpicker.current[1], colorpicker.current[2], colorpicker.current[3])
 							}, colorpicker.holder.drawings);colorpicker.holder.transparencybg = colorpicker_open_transparency_bg
 							--
-							local colorpicker_open_transparency_cursor_outline = utility:Create("Frame", {Vector2.new(((1-colorpicker.current[4]))-3,-3)}, {
-								Size = utility:Size(0, 6, 1, 6),
-								Position = utility:Position(1-colorpicker.current[4], -3, 0, -3),
+							local colorpicker_open_transparency_image = utility:Create("Image", {Vector2.new(1,1), colorpicker_open_transparency_inline}, {
+								Size = utility:Size(1, -2, 1, -2, colorpicker_open_transparency_inline),
+								Position = utility:Position(0, 1, 0 , 1, colorpicker_open_transparency_inline),
+							}, colorpicker.holder.drawings);colorpicker.holder.transparency = colorpicker_open_transparency_image
+							--
+							local colorpicker_open_transparency_cursor_outline = utility:Create("Frame", {Vector2.new((colorpicker_open_transparency_image.Size.X*(1-colorpicker.current[4]))-3,-3), colorpicker_open_transparency_image}, {
+								Size = utility:Size(0, 6, 1, 6, colorpicker_open_transparency_image),
+								Position = utility:Position(1-colorpicker.current[4], -3, 0, -3, colorpicker_open_transparency_image),
 								Color = theme.outline
 							}, colorpicker.holder.drawings);colorpicker.holder.transparency_cursor[1] = colorpicker_open_transparency_cursor_outline
 							--
@@ -3146,7 +3359,13 @@ do
 								Color = Color3.fromHSV(0, 0, 1 - colorpicker.current[4]),
 							}, colorpicker.holder.drawings);colorpicker.holder.transparency_cursor[3] = colorpicker_open_transparency_cursor_color
 							--
+							utility:LoadImage(colorpicker_open_transparency_image, "transp", "https://i.imgur.com/ncssKbH.png")
+							--utility:LoadImage(colorpicker_open_transparency_image, "transp", "https://i.imgur.com/VcMAYjL.png")
 						end
+						--
+						utility:LoadImage(colorpicker_open_picker_image, "valsat", "https://i.imgur.com/wpDRqVH.png")
+						utility:LoadImage(colorpicker_open_picker_cursor, "valsat_cursor", "https://raw.githubusercontent.com/mvonwalk/splix-assets/main/Images-cursor.png")
+						utility:LoadImage(colorpicker_open_huepicker_image, "hue", "https://i.imgur.com/iEOsHFv.png")
 						--
 						window.currentContent.frame = colorpicker_open_inline
 						window.currentContent.colorpicker = colorpicker
@@ -3263,7 +3482,14 @@ do
 			}, section.visibleContent)
 			--
 			local colorpicker__transparency
-
+			if transp then
+				colorpicker__transparency = utility:Create("Image", {Vector2.new(1,1), colorpicker_inline}, {
+					Size = utility:Size(1, -2, 1, -2, colorpicker_inline),
+					Position = utility:Position(0, 1, 0 , 1, colorpicker_inline),
+					Visible = page.open
+				}, section.visibleContent)
+			end
+			--
 			local colorpicker_frame = utility:Create("Frame", {Vector2.new(1,1), colorpicker_inline}, {
 				Size = utility:Size(1, -2, 1, -2, colorpicker_inline),
 				Position = utility:Position(0, 1, 0, 1, colorpicker_inline),
@@ -3271,6 +3497,18 @@ do
 				Transparency = transp and (1 - transp) or 1,
 				Visible = page.open
 			}, section.visibleContent)
+			--
+			local colorpicker__gradient = utility:Create("Image", {Vector2.new(0,0), colorpicker_frame}, {
+				Size = utility:Size(1, 0, 1, 0, colorpicker_frame),
+				Position = utility:Position(0, 0, 0 , 0, colorpicker_frame),
+				Transparency = 0.5,
+				Visible = page.open
+			}, section.visibleContent)
+			--
+			if transp then
+				utility:LoadImage(colorpicker__transparency, "cptransp", "https://i.imgur.com/IIPee2A.png")
+			end
+			utility:LoadImage(colorpicker__gradient, "gradient", "https://i.imgur.com/IP5H9wy.png")
 			--
 			function colorpicker:Set(color, transp_val)
 				if typeof(color) == "table" then
@@ -3411,6 +3649,16 @@ do
 								Color = Color3.fromHSV(colorpicker.current[1],1,1)
 							}, colorpicker.holder.drawings);colorpicker.holder.background = colorpicker_open_picker_bg
 							--
+							local colorpicker_open_picker_image = utility:Create("Image", {Vector2.new(0,0), colorpicker_open_picker_bg}, {
+								Size = utility:Size(1, 0, 1, 0, colorpicker_open_picker_bg),
+								Position = utility:Position(0, 0, 0 , 0, colorpicker_open_picker_bg),
+							}, colorpicker.holder.drawings);colorpicker.holder.picker = colorpicker_open_picker_image
+							--
+							local colorpicker_open_picker_cursor = utility:Create("Image", {Vector2.new((colorpicker_open_picker_image.Size.X*colorpicker.current[2])-3,(colorpicker_open_picker_image.Size.Y*(1-colorpicker.current[3]))-3), colorpicker_open_picker_image}, {
+								Size = utility:Size(0, 6, 0, 6, colorpicker_open_picker_image),
+								Position = utility:Position(colorpicker.current[2], -3, 1-colorpicker.current[3] , -3, colorpicker_open_picker_image),
+							}, colorpicker.holder.drawings);colorpicker.holder.picker_cursor = colorpicker_open_picker_cursor
+							--
 							local colorpicker_open_huepicker_outline = utility:Create("Frame", {Vector2.new(colorpicker_open_frame.Size.X-19,17), colorpicker_open_frame}, {
 								Size = utility:Size(0, 15, 1, transp and -40 or -21, colorpicker_open_frame),
 								Position = utility:Position(1, -19, 0, 17, colorpicker_open_frame),
@@ -3423,9 +3671,14 @@ do
 								Color = theme.inline
 							}, colorpicker.holder.drawings)
 							--
-							local colorpicker_open_huepicker_cursor_outline = utility:Create("Frame", {Vector2.new(-3,(colorpicker.current[1])-3)}, {
-								Size = utility:Size(1, 6, 0, 6),
-								Position = utility:Position(0, -3, colorpicker.current[1], -3),
+							local colorpicker_open_huepicker_image = utility:Create("Image", {Vector2.new(1,1), colorpicker_open_huepicker_inline}, {
+								Size = utility:Size(1, -2, 1, -2, colorpicker_open_huepicker_inline),
+								Position = utility:Position(0, 1, 0 , 1, colorpicker_open_huepicker_inline),
+							}, colorpicker.holder.drawings);colorpicker.holder.huepicker = colorpicker_open_huepicker_image
+							--
+							local colorpicker_open_huepicker_cursor_outline = utility:Create("Frame", {Vector2.new(-3,(colorpicker_open_huepicker_image.Size.Y*colorpicker.current[1])-3), colorpicker_open_huepicker_image}, {
+								Size = utility:Size(1, 6, 0, 6, colorpicker_open_huepicker_image),
+								Position = utility:Position(0, -3, colorpicker.current[1], -3, colorpicker_open_huepicker_image),
 								Color = theme.outline
 							}, colorpicker.holder.drawings);colorpicker.holder.huepicker_cursor[1] = colorpicker_open_huepicker_cursor_outline
 							--
@@ -3460,9 +3713,14 @@ do
 									Color = Color3.fromHSV(colorpicker.current[1], colorpicker.current[2], colorpicker.current[3])
 								}, colorpicker.holder.drawings);colorpicker.holder.transparencybg = colorpicker_open_transparency_bg
 								--
-								local colorpicker_open_transparency_cursor_outline = utility:Create("Frame", {Vector2.new(((1-colorpicker.current[4]))-3,-3)}, {
-									Size = utility:Size(0, 6, 1, 6),
-									Position = utility:Position(1-colorpicker.current[4], -3, 0, -3),
+								local colorpicker_open_transparency_image = utility:Create("Image", {Vector2.new(1,1), colorpicker_open_transparency_inline}, {
+									Size = utility:Size(1, -2, 1, -2, colorpicker_open_transparency_inline),
+									Position = utility:Position(0, 1, 0 , 1, colorpicker_open_transparency_inline),
+								}, colorpicker.holder.drawings);colorpicker.holder.transparency = colorpicker_open_transparency_image
+								--
+								local colorpicker_open_transparency_cursor_outline = utility:Create("Frame", {Vector2.new((colorpicker_open_transparency_image.Size.X*(1-colorpicker.current[4]))-3,-3), colorpicker_open_transparency_image}, {
+									Size = utility:Size(0, 6, 1, 6, colorpicker_open_transparency_image),
+									Position = utility:Position(1-colorpicker.current[4], -3, 0, -3, colorpicker_open_transparency_image),
 									Color = theme.outline
 								}, colorpicker.holder.drawings);colorpicker.holder.transparency_cursor[1] = colorpicker_open_transparency_cursor_outline
 								--
@@ -3478,7 +3736,13 @@ do
 									Color = Color3.fromHSV(0, 0, 1 - colorpicker.current[4]),
 								}, colorpicker.holder.drawings);colorpicker.holder.transparency_cursor[3] = colorpicker_open_transparency_cursor_color
 								--
+								utility:LoadImage(colorpicker_open_transparency_image, "transp", "https://i.imgur.com/ncssKbH.png")
+								--utility:LoadImage(colorpicker_open_transparency_image, "transp", "https://i.imgur.com/VcMAYjL.png")
 							end
+							--
+							utility:LoadImage(colorpicker_open_picker_image, "valsat", "https://i.imgur.com/wpDRqVH.png")
+							utility:LoadImage(colorpicker_open_picker_cursor, "valsat_cursor", "https://raw.githubusercontent.com/mvonwalk/splix-assets/main/Images-cursor.png")
+							utility:LoadImage(colorpicker_open_huepicker_image, "hue", "https://i.imgur.com/iEOsHFv.png")
 							--
 							window.currentContent.frame = colorpicker_open_inline
 							window.currentContent.colorpicker = colorpicker
@@ -3597,6 +3861,13 @@ do
 			Visible = page.open
 		}, section.visibleContent)
 		--
+		local configLoader_gradient = utility:Create("Image", {Vector2.new(0,0), configLoader_frame}, {
+			Size = utility:Size(1, 0, 1, 0, configLoader_frame),
+			Position = utility:Position(0, 0, 0 , 0, configLoader_frame),
+			Transparency = 0.5,
+			Visible = page.open
+		}, section.visibleContent)
+		--
 		for i=1, 8 do
 			local config_title = utility:Create("TextLabel", {Vector2.new(configLoader_frame.Size.X/2,2 + (18 * (i-1))), configLoader_frame}, {
 				Text = "Config-Slot: "..tostring(i),
@@ -3611,6 +3882,8 @@ do
 			--
 			configLoader.buttons[i] = config_title
 		end
+		--
+		utility:LoadImage(configLoader_gradient, "gradient", "https://i.imgur.com/IP5H9wy.png")
 		--
 		function configLoader:Refresh()
 			for i,v in pairs(configLoader.buttons) do
