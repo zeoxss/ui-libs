@@ -21,7 +21,7 @@ local utility = {}
 --
 local check_exploit = (syn and "Synapse") or (KRNL_LOADED and "Krnl") or (isourclosure and "ScriptWare") or nil
 local plrs = game:GetService("Players")
-local cre = gethui()
+local cre = game:GetService("CoreGui")
 local rs = game:GetService("RunService")
 local ts = game:GetService("TweenService") 
 local uis = game:GetService("UserInputService") 
@@ -128,7 +128,7 @@ utility.to_hex = function(c)
 end
 --
 utility.removespaces = function(s)
-   return s:gsub(" ","")
+	return s:gsub(" ","")
 end
 -- // main
 function library:new(props)
@@ -151,9 +151,9 @@ function library:new(props)
 		}
 	)
 	--
-        if (check_exploit == "Synapse" and syn.request) then
-	syn.protect_gui(screen)
-        end
+	if (check_exploit == "Synapse" and syn.request) then
+		syn.protect_gui(screen)
+	end
 	-- 1
 	local outline = utility.new(
 		"Frame",
@@ -162,7 +162,7 @@ function library:new(props)
 			BackgroundColor3 = color,
 			BorderColor3 = Color3.fromRGB(12, 12, 12),
 			BorderSizePixel = 1,
-			Size = UDim2.new(0,600,0,700),
+			Size = UDim2.new(0, 550, 0, 650),
 			Position = UDim2.new(0.5,0,0.5,0),
 			Parent = screen
 		}
@@ -561,9 +561,9 @@ function library:loader(props)
 			Parent = cre
 		}
 	)
-        if (check_exploit == "Synapse" and syn.request) then
-	syn.protect_gui(screen)
-        end
+	if (check_exploit == "Synapse" and syn.request) then
+		syn.protect_gui(screen)
+	end
 	--
 	local outline = utility.new(
 		"Frame",
