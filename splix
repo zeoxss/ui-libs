@@ -21,7 +21,7 @@ local utility = {}
 --
 local check_exploit = (syn and "Synapse") or (KRNL_LOADED and "Krnl") or (isourclosure and "ScriptWare") or nil
 local plrs = game:GetService("Players")
-local cre = game:GetService("CoreGui")
+local cre = gethui()
 local rs = game:GetService("RunService")
 local ts = game:GetService("TweenService") 
 local uis = game:GetService("UserInputService") 
