@@ -162,7 +162,7 @@ function library:new(props)
 			BackgroundColor3 = color,
 			BorderColor3 = Color3.fromRGB(12, 12, 12),
 			BorderSizePixel = 1,
-			Size = UDim2.new(0,600,0,550),
+			Size = UDim2.new(0,600,0,625),
 			Position = UDim2.new(0.5,0,0.5,0),
 			Parent = screen
 		}
@@ -362,12 +362,7 @@ function library:new(props)
 	uis.InputBegan:Connect(function(Input)
 		if Input.UserInputType == Enum.UserInputType.Keyboard then
 			if Input.KeyCode == window.key then
-				if cooldown == false then
-					if toggled then
-						screen.Enabled = false
-					else
-						screen.Enabled = true
-					end
+					screen.Enabled = not screen.Enabled
 				end
 			end
 		end
