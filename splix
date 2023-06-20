@@ -150,25 +150,6 @@ function library:new(props)
 			Parent = cre
 		}
 	)
-		
-	local modalButton = utility.new(
-		"TextButton",
-		{
-			Name = "modalbutton",
-			Parent = screen,
-			BackgroundTransparency = 1,
-			Modal = true,
-			Text = ""
-		}
-	)
-
-	rs.RenderStepped:Connect(function()
-		if screen.Enabled then
-			modalButton.Modal = true
-		else
-			modalButton.Modal = false
-		end
-	end)
 	
 	--
 	if (check_exploit == "Synapse" and syn.request) then
