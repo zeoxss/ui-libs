@@ -150,8 +150,9 @@ function library:new(props)
 			Parent = cre
 		}
 	)
-	
-	local modalButton = utility.new("TextButton",
+
+	local modalButton = utility.new(
+		"TextButton",
 		{
 			AnchorPoint = Vector2.new(0,0),
 			BackgroundTransparency = 1,
@@ -160,7 +161,7 @@ function library:new(props)
 			Text = "",
 			TextColor3 = Color3.fromRGB(255,255,255),
 			TextSize = 12,
-			Modal = true,
+			Modal = false,
 			TextStrokeTransparency = 0,
 			Font = "RobotoMono",
 			ZIndex = 1,
@@ -168,6 +169,11 @@ function library:new(props)
 		}
 	)
 	
+	if screen.Enabled == true then
+		modalButton.Modal = true
+	elseif screen.Enabled == false then
+		modalButton.Modal = false
+	end
 	--
 	if (check_exploit == "Synapse" and syn.request) then
 		syn.protect_gui(screen)
@@ -407,7 +413,6 @@ function library:new(props)
 						--
 						if window.x == false and window.y == false then
 							screen.Enabled = false
-							modalButton.Modal = false
 						else
 							ts:Create(outline, TweenInfo.new(0.5,Enum.EasingStyle.Quad,Enum.EasingDirection.In), {Position = UDim2.new(xx,xxx,yy,yyy)}):Play()
 						end
@@ -418,7 +423,6 @@ function library:new(props)
 						toggled = not toggled
 						if window.x == false and window.y == false then
 							screen.Enabled = true
-							modalButton.Modal = true
 						else
 							ts:Create(outline, TweenInfo.new(0.5,Enum.EasingStyle.Quad,Enum.EasingDirection.Out), {Position = saved}):Play()
 						end
