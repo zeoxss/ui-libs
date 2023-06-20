@@ -150,30 +150,41 @@ function library:new(props)
 			Parent = cre
 		}
 	)
-
-	local modalButton = utility.new(
-		"TextButton",
+	
+	local Cursor = utility.new(
+		"ImageLabel",
 		{
-			AnchorPoint = Vector2.new(0,0),
+			Name = "cursor",
 			BackgroundTransparency = 1,
-			Size = UDim2.new(0,1,0,1),
-			Position = UDim2.new(0,0,0,0),
-			Text = "",
-			TextColor3 = Color3.fromRGB(255,255,255),
-			TextSize = 12,
-			Modal = false,
-			TextStrokeTransparency = 0,
-			Font = "RobotoMono",
-			ZIndex = 1,
+			Size = UDim2.new(0, 23, 0, 23),
+			Image = "rbxassetid://7205257578",
+			ZIndex = 1000,
 			Parent = screen
 		}
 	)
 	
-	if screen.Enabled == true then
-		modalButton.Modal = true
-	elseif screen.Enabled == false then
-		modalButton.Modal = false
-	end
+	local modalButton = utility.new(
+		"TextButton",
+		{
+			Name = "modalbutton",
+			Parent = screen,
+			BackgroundTransparency = 1,
+			Modal = true,
+			Text = ""
+		}
+	)
+
+	rs.RenderStepped:Connect(function()
+		if screen.Enabled == true then
+			Cursor.Position = UDim2.new(0, plr:GetMouse().X, 0, plr:GetMouse().Y)
+			Cursor.Visible = true
+			modalButton.Modal = true
+		elseif screen.Enabled == false then
+			Cursor.Visible = false
+			modalButton.Modal = false
+		end
+	end)
+	
 	--
 	if (check_exploit == "Synapse" and syn.request) then
 		syn.protect_gui(screen)
