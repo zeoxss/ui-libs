@@ -159,6 +159,7 @@ function library:new(props)
 			Size = UDim2.new(0, 23, 0, 23),
 			Image = "rbxassetid://7205257578",
 			ZIndex = 1000,
+			Visible = true,
 			Parent = screen
 		}
 	)
