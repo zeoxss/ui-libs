@@ -128,7 +128,7 @@ utility.to_hex = function(c)
 end
 --
 utility.removespaces = function(s)
-   return s:gsub(" ","")
+	return s:gsub(" ","")
 end
 -- // main
 function library:new(props)
@@ -150,10 +150,28 @@ function library:new(props)
 			Parent = cre
 		}
 	)
+	
+	local modalButton = utility.new("TextButton",
+		{
+			AnchorPoint = Vector2.new(0,0),
+			BackgroundTransparency = 1,
+			Size = UDim2.new(0,1,0,1),
+			Position = UDim2.new(0,0,0,0),
+			Text = "",
+			TextColor3 = Color3.fromRGB(255,255,255),
+			TextSize = 12,
+			Modal = true,
+			TextStrokeTransparency = 0,
+			Font = "RobotoMono",
+			ZIndex = 1,
+			Parent = screen
+		}
+	)
+	
 	--
-        if (check_exploit == "Synapse" and syn.request) then
-	syn.protect_gui(screen)
-        end
+	if (check_exploit == "Synapse" and syn.request) then
+		syn.protect_gui(screen)
+	end
 	-- 1
 	local outline = utility.new(
 		"Frame",
@@ -389,6 +407,7 @@ function library:new(props)
 						--
 						if window.x == false and window.y == false then
 							screen.Enabled = false
+							modalButton.Modal = false
 						else
 							ts:Create(outline, TweenInfo.new(0.5,Enum.EasingStyle.Quad,Enum.EasingDirection.In), {Position = UDim2.new(xx,xxx,yy,yyy)}):Play()
 						end
@@ -399,6 +418,7 @@ function library:new(props)
 						toggled = not toggled
 						if window.x == false and window.y == false then
 							screen.Enabled = true
+							modalButton.Modal = true
 						else
 							ts:Create(outline, TweenInfo.new(0.5,Enum.EasingStyle.Quad,Enum.EasingDirection.Out), {Position = saved}):Play()
 						end
@@ -561,9 +581,9 @@ function library:loader(props)
 			Parent = cre
 		}
 	)
-        if (check_exploit == "Synapse" and syn.request) then
-	syn.protect_gui(screen)
-        end
+	if (check_exploit == "Synapse" and syn.request) then
+		syn.protect_gui(screen)
+	end
 	--
 	local outline = utility.new(
 		"Frame",
