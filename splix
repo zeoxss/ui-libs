@@ -176,13 +176,13 @@ function library:new(props)
 	)
 
 	rs.RenderStepped:Connect(function()
-		if screen.Enabled == true then
-			Cursor.Position = UDim2.new(0, plr:GetMouse().X, 0, plr:GetMouse().Y)
-			Cursor.Visible = true
+		Cursor.Position = UDim2.new(0, plr:GetMouse().X, 0, plr:GetMouse().Y)
+		if screen.Enabled then
+			Cursor.ImageTransparency = 0
 			modalButton.Modal = true
 			uis.MouseIconEnabled = true
-		elseif screen.Enabled == false then
-			Cursor.Visible = false
+		else
+			Cursor.ImageTransparency = 1
 			modalButton.Modal = false
 			uis.MouseIconEnabled = false
 		end
