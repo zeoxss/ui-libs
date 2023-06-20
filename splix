@@ -179,9 +179,11 @@ function library:new(props)
 			Cursor.Position = UDim2.new(0, plr:GetMouse().X, 0, plr:GetMouse().Y)
 			Cursor.Visible = true
 			modalButton.Modal = true
+			uis.MouseIconEnabled = true
 		elseif screen.Enabled == false then
 			Cursor.Visible = false
 			modalButton.Modal = false
+			uis.MouseIconEnabled = false
 		end
 	end)
 	
